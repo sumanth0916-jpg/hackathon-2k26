@@ -1,75 +1,93 @@
-# LostX.ai — Smart Campus Lost & Found 🎒⚡
+# LifeLink — Connecting Donors, Saving Lives 🩸
 
-> "Lost something? Let AI help bring it back."
-
-LostX.ai is an AI-powered lost and found intelligence platform designed for university campuses. It eliminates messy message boards by analyzing submitted item photos with Gemini 2.5 multimodal vision, extracting physical attributes, and cross-matching lost and found reports using a deterministic 5-factor weighted algorithm.
+> **Location-aware matching between blood and organ donors and the people who urgently need them.**  
+> Deployed live reference: [beacon-life.lovable.app](https://beacon-life.lovable.app)
 
 ---
 
-## 🌟 Key Features
+## 🌟 Overview
 
-1. **Multimodal Gemini 2.5 Vision Attribute Extraction**:
-   - Analyzes photos to identify object type, brand, primary/secondary colors, distinctive marks, stickers, scratches, and condition.
-2. **5-Factor Weighted Matching Pipeline**:
-   - Visual Similarity (35%)
-   - Description Text Similarity (25%)
-   - Category Match (15%)
-   - Campus Location Proximity (15%)
-   - Time Compatibility (10%)
-3. **Categorized Confidence Tiers**:
-   - `90%–100%`: Very Strong Match
-   - `75%–89%`: Strong Match
-   - `60%–74%`: Possible Match
-   - `<60%`: Low Match
-4. **Side-by-Side Comparison Matrix**:
-   - Side-by-side desktop view / mobile stacked comparison with natural language AI reasoning.
-5. **Safe Ownership Claiming Flow**:
-   - "I Think This Is Mine" workflow with private verification clues (e.g. wallpaper description, hidden serial number) without exposing personal phone/email publicly.
-6. **Campus Reconnection & Reunited Lifecycle**:
-   - "Mark as Reunited 🎉" celebratory flow with confetti animations.
-7. **Zero-Setup Judge Demo Mode**:
-   - Pre-seeded with 12 realistic campus items across 6 pairs (backpacks, phones, student IDs, AirPods, water bottles, keys) with a 1-click dataset reset button.
+**LifeLink** is a modern, privacy-first healthcare coordination platform designed to bridge the critical gap between voluntary blood/organ donors and patients in emergency medical situations. By pairing biological compatibility with real-time proximity matching and verified medical identities, LifeLink ensures that the closest eligible donor can be mobilized in seconds.
+
+---
+
+## ✨ Key Features
+
+### 1. 🎯 Location-Aware Proximity Radar
+- **Haversine Proximity Matching**: Ranks compatible donors by live distance (5 km, 10 km, 25 km, 50 km).
+- **Interactive Proximity Radar Canvas**: Visual radar sweep animation with live emergency markers, distance rings, and hospital pins.
+- **Privacy By Default (~1 km Area Jitter)**: Exact home GPS coordinates and addresses are never publicly published. Only an approximate ~1 km radius is visible.
+
+### 2. 🧬 Biological Compatibility Engine
+- Full 8-group ABO & Rh compatibility matrix (`O-`, `O+`, `A-`, `A+`, `B-`, `B+`, `AB-`, `AB+`).
+- Support for multiple donation types: **Whole Blood**, **Plasma**, **Platelets**, **Organ Registration Coordination**, and **Stem Cells**.
+
+### 3. 🚨 Emergency Mode & Live Broadcasts
+- Emergency requests trigger audible and visual siren pulses.
+- Real-time alerts broadcast to all compatible donors within city radius.
+
+### 4. 🔒 Two-Way Mutual Consent Contact Vault
+- Personal phone numbers and emails are stored in a protected vault.
+- Contact details are unlocked only after **both** the donor offers help and the recipient accepts.
+
+### 5. 👥 Dual Specialized Hubs
+- **Donor Hub (`/donor`, `/donor/nearby`)**: Instant availability toggle (Active / Away), nearby emergency radar, response tracker.
+- **Recipient Hub (`/receiver`, `/receiver/donors`, `/receiver/new`)**: Intuitive 5-step donation request wizard, ranked donor list by match score, live status tracker.
+
+### 6. 🛡️ Admin Moderation Desk (`/admin`)
+- Moderation queue to verify medical identities and review urgent clinical requests.
+- Real-time platform statistics across active donors, open requests, and fulfilled connections.
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React 19, TypeScript, Vite, Tailwind CSS v4, Lucide React
-- **AI & Vision**: Google Gemini 2.5 Flash (`@google/genai` / REST) with deterministic offline fallback
-- **Backend & Cloud**: Firebase Authentication, Cloud Firestore, Firebase Cloud Storage
-- **Geolocation**: Browser Geolocation API + Campus Building presets (Library, CS Block, Cafeteria, etc.)
-- **Security**: Strict `firestore.rules` and `storage.rules`
+- **Framework**: React 19 + TypeScript
+- **Bundler**: Vite
+- **Styling**: Tailwind CSS (Tailwind v4 with modern OKLCH tokens & glassmorphism)
+- **Typography**: Plus Jakarta Sans & Sora (Google Fonts)
+- **Icons**: Lucide React
+- **State Management**: Reactive Context API with LocalStorage offline persistence + Supabase ready
+- **Animations**: CSS Radar Sweep, Beacon Pulses, Canvas Confetti
 
 ---
 
 ## 🚀 Getting Started
 
-### 1. Install Dependencies
+### Prerequisites
+- Node.js (v18 or higher)
+- npm or yarn
+
+### Installation & Local Setup
+
 ```bash
+# Clone the repository
+git clone https://github.com/sumanth0916-jpg/hackathon-2k26.git
+cd hackathon-2k26
+
+# Install dependencies
 npm install
-```
 
-### 2. Configure Environment Variables (Optional)
-Copy `.env.example` to `.env` and provide your keys:
-```bash
-cp .env.example .env
-```
-*(Note: If no API keys are provided, LostX.ai automatically operates in Standalone Demo Mode with a deterministic matching engine.)*
-
-### 3. Run Development Server
-```bash
+# Start the local development server
 npm run dev
 ```
 
-### 4. Build for Production
-```bash
-npm run build
-```
+Visit `http://localhost:5173` in your browser.
+
+### Instant Demo Accounts
+The application includes preconfigured one-click demo personas in the navigation bar:
+- **Donor**: Dr. Ananya Sharma (`donor@lifelink.org`) — O- Universal Donor
+- **Recipient**: Rahul Verma (`receiver@lifelink.org`) — B+ Patient
+- **Admin**: LifeLink Moderation Desk (`admin@lifelink.org`)
 
 ---
 
-## 🔒 Security & Privacy
+## ⚖️ Medical & Legal Disclaimers
 
-- Public views only expose approximate campus zones, never exact GPS coordinates.
-- Firebase Security Rules restrict write operations to authenticated owners and validate file sizes (<12MB) and image MIME types.
-- Claims and verification clues are private between the claimant, report owner, and campus administrators.
+1. **Medical Advice**: LifeLink is a connection platform and does not provide medical advice or determine medical eligibility. Blood and organ donation eligibility, compatibility, testing, and medical decisions must be confirmed by qualified healthcare professionals and authorized medical facilities.
+2. **Organ Trade Prohibition**: Organ donation on LifeLink covers registration of intent and coordination through authorized medical facilities only. Buying, selling, or otherwise trading human organs is illegal and strictly prohibited.
+
+---
+
+## 📄 License
+MIT License. Built for hackathons and public health impact.
