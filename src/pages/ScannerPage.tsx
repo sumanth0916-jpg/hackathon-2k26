@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { DemoPromptSelector } from '../components/DemoPromptSelector';
 import { VisualPiiTransformation } from '../components/VisualPiiTransformation';
 import { ExplainableTrustScore } from '../components/ExplainableTrustScore';
 import { TrustPassportCard } from '../components/TrustPassportCard';
 import { ThreatDetailsCard } from '../components/ThreatDetailsCard';
 import { ResponseTrustCard } from '../components/ResponseTrustCard';
+import { LiveActivityFeed } from '../components/LiveActivityFeed';
 import { detectAndRedactPii, PiiScanResult } from '../services/piiDetector';
 import { detectThreatsAndInjections, ThreatScanResult } from '../services/injectionDetector';
 import { generateTrustPassport } from '../services/passportGenerator';
@@ -34,11 +35,11 @@ interface ScannerPageProps {
 
 export const ScannerPage: React.FC<ScannerPageProps> = ({ onOpenVerifyModal }) => {
   // Input states
-  const [promptText, setPromptText] = useState<string>(DEMO_SCENARIOS[1].rawPrompt); // Default to Privacy Leak for instant visual punch
+  const [promptText, setPromptText] = useState<string>(DEMO_SCENARIOS[1].rawPrompt); // Default to Privacy Leak
   const [selectedModel, setSelectedModel] = useState<string>('Gemini 1.5 Pro');
   const [activeScenarioId, setActiveScenarioId] = useState<string | null>(DEMO_SCENARIOS[1].id);
   const [isScanning, setIsScanning] = useState<boolean>(false);
-  const [scanStep, setScanStep] = useState<number>(0); // 0: Idle, 1: Scanning PII, 2: Threat Heuristics, 3: Calculating Scores, 4: Complete
+  const [scanStep, setScanStep] = useState<number>(0);
 
   // Policy configuration
   const [autoRedact, setAutoRedact] = useState<boolean>(true);
@@ -290,22 +291,27 @@ export const ScannerPage: React.FC<ScannerPageProps> = ({ onOpenVerifyModal }) =
             />
           </div>
 
-          {/* Right Column: THE FLAGSHIP PRIVORA TRUST PASSPORT */}
-          <div className="lg:col-span-5 sticky top-24 space-y-4">
-            <div className="flex items-center justify-between px-1">
-              <span className="text-xs font-bold uppercase tracking-wider text-cyan-400 font-mono flex items-center">
-                <Sparkles className="w-3.5 h-3.5 mr-1" />
-                Final Output Artifact
-              </span>
-              <span className="text-[11px] text-slate-400 font-mono">
-                Auto-saved to Vault
-              </span>
+          {/* Right Column: THE FLAGSHIP PRIVORA TRUST PASSPORT & LIVE FEED */}
+          <div className="lg:col-span-5 sticky top-24 space-y-6">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between px-1">
+                <span className="text-xs font-bold uppercase tracking-wider text-cyan-400 font-mono flex items-center">
+                  <Sparkles className="w-3.5 h-3.5 mr-1" />
+                  Final Output Artifact
+                </span>
+                <span className="text-[11px] text-slate-400 font-mono">
+                  Auto-saved to Vault
+                </span>
+              </div>
+
+              <TrustPassportCard
+                passport={currentPassport}
+                onOpenVerifyModal={onOpenVerifyModal}
+              />
             </div>
 
-            <TrustPassportCard
-              passport={currentPassport}
-              onOpenVerifyModal={onOpenVerifyModal}
-            />
+            {/* Real-time Activity Telemetry Stream */}
+            <LiveActivityFeed />
           </div>
         </div>
       </div>

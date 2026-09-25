@@ -7,6 +7,7 @@ import { PassportVaultPage } from './pages/PassportVaultPage';
 import { AttackMatrixPage } from './pages/AttackMatrixPage';
 import { PolicyEnginePage } from './pages/PolicyEnginePage';
 import { ApiDocsPage } from './pages/ApiDocsPage';
+import { AboutPage } from './pages/AboutPage';
 
 export const App: React.FC = () => {
   const [isVerifyModalOpen, setIsVerifyModalOpen] = useState<boolean>(false);
@@ -40,6 +41,7 @@ export const App: React.FC = () => {
             />
             <Route path="/attack-matrix" element={<AttackMatrixPage />} />
             <Route path="/policy" element={<PolicyEnginePage />} />
+            <Route path="/about" element={<AboutPage />} />
             <Route path="/api-docs" element={<ApiDocsPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

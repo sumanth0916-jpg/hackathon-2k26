@@ -9,7 +9,8 @@ import {
   Sliders, 
   FileCode, 
   Sparkles,
-  Zap
+  Zap,
+  Info
 } from 'lucide-react';
 import { getPassportVault } from '../services/passportGenerator';
 
@@ -41,6 +42,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenVerifyModal }) => {
     { name: 'Passport Vault', path: '/vault', icon: KeyRound, badge: vaultCount },
     { name: 'Attack Matrix', path: '/attack-matrix', icon: Activity },
     { name: 'Policy Rules', path: '/policy', icon: Sliders },
+    { name: 'Architecture', path: '/about', icon: Info },
     { name: 'API & SDK', path: '/api-docs', icon: FileCode }
   ];
 
@@ -111,7 +113,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenVerifyModal }) => {
                 <Link
                   key={link.name}
                   to={link.path}
-                  className={`flex items-center space-x-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-200 relative ${
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 relative ${
                     isActive
                       ? 'text-cyan-300 bg-cyan-950/60 border border-cyan-500/30 shadow-sm'
                       : 'text-slate-300 hover:text-white hover:bg-slate-800/60 border border-transparent'
@@ -120,7 +122,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenVerifyModal }) => {
                   <Icon className={`w-4 h-4 ${isActive ? 'text-cyan-400' : 'text-slate-400'}`} />
                   <span>{link.name}</span>
                   {link.badge !== undefined && link.badge > 0 && (
-                    <span className="ml-1.5 px-1.5 py-0.2 text-[10px] font-bold rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
+                    <span className="ml-1 px-1.5 py-0.2 text-[10px] font-bold rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
                       {link.badge}
                     </span>
                   )}
