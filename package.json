@@ -1,7 +1,8 @@
 {
-  "name": "lifelink",
+  "name": "privora",
   "private": true,
-  "version": "1.0.0",
+  "version": "2.6.0",
+  "description": "Privora — AI Security Gateway, Trust Passport & Guardrail Defense",
   "type": "module",
   "scripts": {
     "dev": "vite",

@@ -3,105 +3,74 @@
 @layer base {
   :root {
     --radius: 1rem;
-    --background: #fafafa;
-    --surface: #ffffff;
-    --foreground: #0f172a;
-    --card: #ffffff;
-    --card-foreground: #0f172a;
-    --primary: #e11d48; /* Crimson Life Red */
-    --primary-hover: #be123c;
-    --primary-foreground: #ffffff;
-    --secondary: #f1f5f9;
-    --secondary-foreground: #1e293b;
-    --medical: #0d9488; /* Clinical Teal / Cyan */
-    --medical-foreground: #ffffff;
-    --muted: #f8fafc;
-    --muted-foreground: #64748b;
-    --accent: #f0fdf4;
-    --accent-foreground: #166534;
-    --destructive: #ef4444;
+    --background: #060911;
+    --surface: #0c121e;
+    --foreground: #f8fafc;
+    --card: #0f172a;
+    --card-foreground: #f8fafc;
+    --primary: #06b6d4; /* Cyan 500 */
+    --primary-hover: #0891b2;
+    --primary-foreground: #020617;
+    --secondary: #1e293b;
+    --secondary-foreground: #f8fafc;
+    --accent: #10b981; /* Emerald 500 */
+    --accent-foreground: #022c22;
+    --destructive: #f43f5e; /* Rose 500 */
     --destructive-foreground: #ffffff;
     --success: #10b981;
     --success-foreground: #ffffff;
     --warning: #f59e0b;
     --warning-foreground: #ffffff;
-    --emergency: #e11d48;
-    --emergency-foreground: #ffffff;
-    --border: #e2e8f0;
-    --input: #e2e8f0;
-    --ring: #e11d48;
-  }
-
-  .dark {
-    --background: #090d16;
-    --surface: #111827;
-    --foreground: #f8fafc;
-    --card: #111827;
-    --card-foreground: #f8fafc;
-    --primary: #f43f5e;
-    --primary-hover: #e11d48;
-    --primary-foreground: #ffffff;
-    --secondary: #1e293b;
-    --secondary-foreground: #f8fafc;
-    --medical: #14b8a6;
-    --medical-foreground: #042f2e;
-    --muted: #1e293b;
-    --muted-foreground: #94a3b8;
-    --accent: #064e3b;
-    --accent-foreground: #6ee7b7;
-    --destructive: #f87171;
-    --destructive-foreground: #ffffff;
-    --success: #34d399;
-    --success-foreground: #064e3b;
-    --warning: #fbbf24;
-    --warning-foreground: #78350f;
-    --emergency: #f43f5e;
-    --emergency-foreground: #ffffff;
     --border: #1e293b;
     --input: #1e293b;
-    --ring: #f43f5e;
+    --ring: #06b6d4;
   }
 
   body {
     font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background-color: var(--background);
     color: var(--foreground);
+    overflow-x: hidden;
+  }
+
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', monospace;
   }
 }
 
 .font-display {
-  font-family: 'Sora', 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
 }
 
-.text-gradient-life {
-  background-image: linear-gradient(110deg, #e11d48 0%, #0d9488 100%);
-  color: transparent;
-  -webkit-background-clip: text;
-  background-clip: text;
+/* Custom Scrollbar for cyber terminal aesthetic */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
-.bg-life-gradient {
-  background-image: linear-gradient(135deg, #e11d48 0%, #9f1239 50%, #0d9488 100%);
+::-webkit-scrollbar-track {
+  background: #090d16;
 }
 
-.bg-soft-grid {
-  background-image: radial-gradient(circle at 15% 10%, rgba(225, 29, 72, 0.08), transparent 45%),
-    radial-gradient(circle at 85% 0%, rgba(13, 148, 136, 0.08), transparent 40%),
-    radial-gradient(circle at 50% 100%, rgba(225, 29, 72, 0.04), transparent 50%);
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 9999px;
 }
 
-.card-surface {
-  background-color: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 1rem;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+::-webkit-scrollbar-thumb:hover {
+  background: #06b6d4;
 }
 
-.card-surface-hover:hover {
-  border-color: #cbd5e1;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.06), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
-  transform: translateY(-2px);
+/* Glowing Holographic Border Utility */
+.hologram-card {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.05) 0%, rgba(16, 185, 129, 0.03) 100%);
+  border: 1px solid rgba(6, 182, 212, 0.25);
+  box-shadow: 0 0 25px -5px rgba(6, 182, 212, 0.1);
+}
+
+.hologram-card:hover {
+  border-color: rgba(6, 182, 212, 0.45);
+  box-shadow: 0 0 35px -5px rgba(6, 182, 212, 0.2);
 }
 
 /* Radar pulse animations */
@@ -114,38 +83,6 @@
   }
 }
 
-@keyframes pulse-ring {
-  0% {
-    transform: scale(0.85);
-    opacity: 0.9;
-  }
-  50% {
-    transform: scale(1.6);
-    opacity: 0.2;
-  }
-  100% {
-    transform: scale(2.2);
-    opacity: 0;
-  }
-}
-
-@keyframes emergency-glow {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.5);
-  }
-  50% {
-    box-shadow: 0 0 0 12px rgba(225, 29, 72, 0);
-  }
-}
-
 .animate-radar-sweep {
   animation: radar-sweep 4s linear infinite;
-}
-
-.animate-pulse-ring {
-  animation: pulse-ring 2.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
-}
-
-.animate-emergency-glow {
-  animation: emergency-glow 1.8s infinite;
 }
