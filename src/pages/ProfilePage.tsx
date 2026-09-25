@@ -19,7 +19,8 @@ import {
   Save,
   ArrowRight,
   Shield,
-  Zap
+  Zap,
+  Activity
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
@@ -65,7 +66,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onOpenAuthModal }) => 
 
   return (
     <div className="py-10 px-6 sm:px-10 max-w-5xl space-y-8 animate-in fade-in duration-300">
-      {/* SECTION HEADER (Exact copy from user screenshot) */}
+      {/* SECTION HEADER (Exact visual match from user reference) */}
       <div className="space-y-2">
         <span className="text-[11px] font-bold text-[#00dfa2] tracking-widest uppercase font-mono block">
           ACCOUNT ACCESS
@@ -78,7 +79,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onOpenAuthModal }) => 
         </p>
       </div>
 
-      {/* CONDITIONAL CONTENT: UNAUTHENTICATED (EXACT MATCH TO USER SCREENSHOT) */}
+      {/* STATE 1: UNAUTHENTICATED (MATCHES ATTACHED SCREENSHOT EXACTLY) */}
       {!user ? (
         <div className="bg-[#0b121b] border border-[#172335] rounded-2xl p-7 sm:p-8 space-y-6 shadow-xl max-w-3xl">
           <div className="flex items-start space-x-4">
@@ -93,12 +94,12 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onOpenAuthModal }) => 
                 Sign in to continue
               </h3>
               <p className="text-xs text-slate-400 leading-relaxed max-w-xl">
-                Privora uses secure credential-based authentication. Your password is handled by the managed auth provider and never stored in this app.
+                Your password is handled securely by the authentication provider and is never stored in this application.
               </p>
             </div>
           </div>
 
-          {/* Large Mint/Teal CTA Button (Exact match from screenshot) */}
+          {/* Primary Mint CTA Button */}
           <div className="pt-2 flex flex-wrap items-center gap-3">
             <button
               onClick={() => {
@@ -112,7 +113,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onOpenAuthModal }) => 
 
             {/* Quick 1-Click Persona Shortcuts */}
             <div className="flex items-center space-x-2 text-xs">
-              <span className="text-slate-500 font-mono text-[11px]">or 1-click demo:</span>
+              <span className="text-slate-500 font-mono text-[11px]">or demo login:</span>
               <button
                 onClick={() => loginAsDemoPersona('admin')}
                 className="px-2.5 py-1 rounded-lg bg-[#0d1722] hover:bg-[#132233] text-slate-300 hover:text-white border border-[#1b2b3f] text-[11px] font-mono transition-colors"
@@ -129,7 +130,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onOpenAuthModal }) => 
           </div>
         </div>
       ) : (
-        /* AUTHENTICATED PROFILE VIEW: OPERATOR CREDENTIALS DASHBOARD */
+        /* STATE 2: AUTHENTICATED PROFILE (REQUIREMENT 4: USER PROFILE DASHBOARD) */
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Left Column: Operator ID Holographic Card */}
           <div className="lg:col-span-5 space-y-4">
@@ -139,7 +140,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onOpenAuthModal }) => 
                 <div className="flex items-center space-x-2">
                   <ShieldCheck className="w-4 h-4 text-[#00dfa2]" />
                   <span className="font-bold text-xs uppercase tracking-widest text-white font-display">
-                    OPERATOR IDENTITY
+                    PROFILE
                   </span>
                 </div>
                 <span className="text-[10px] font-mono font-bold bg-[#00dfa2]/20 text-[#00dfa2] px-2 py-0.5 rounded border border-[#00dfa2]/40">
@@ -159,21 +160,23 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onOpenAuthModal }) => 
                 </div>
               </div>
 
-              {/* Details table */}
-              <div className="p-3 bg-[#060a10] rounded-xl border border-[#131b2a] space-y-2 text-xs font-mono">
-                <div className="flex justify-between">
-                  <span className="text-slate-400">Clearance:</span>
-                  <span className="font-bold text-[#00dfa2]">{user.clearanceLevel}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-400">Organization:</span>
-                  <span className="text-slate-200">{user.organization}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-400">MFA Status:</span>
-                  <span className="text-[#00dfa2] font-bold flex items-center">
-                    <CheckCircle2 className="w-3 h-3 mr-1" /> Active
+              {/* Status Section (Account Status & Security Check) */}
+              <div className="p-3.5 bg-[#060a10] rounded-xl border border-[#131b2a] space-y-2.5 text-xs font-mono">
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-400">Account Status</span>
+                  <span className="text-emerald-400 font-bold flex items-center">
+                    <CheckCircle2 className="w-3.5 h-3.5 mr-1" /> Active
                   </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-400">Security</span>
+                  <span className="text-[#00dfa2] font-bold flex items-center">
+                    <ShieldCheck className="w-3.5 h-3.5 mr-1" /> Protected
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-400">Organization</span>
+                  <span className="text-slate-200 truncate max-w-[140px]">{user.organization}</span>
                 </div>
               </div>
 
@@ -195,24 +198,24 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onOpenAuthModal }) => 
                   className="flex-1 py-2 rounded-xl bg-[#101b27] hover:bg-[#162536] text-slate-200 text-xs font-semibold flex items-center justify-center space-x-1.5 transition-colors border border-[#1d2f44]"
                 >
                   <Edit3 className="w-3.5 h-3.5 text-[#00dfa2]" />
-                  <span>{isEditing ? 'Close Edit' : 'Edit Profile'}</span>
+                  <span>{isEditing ? 'Close' : 'Edit Profile'}</span>
                 </button>
 
                 <button
                   onClick={logout}
-                  className="px-3 py-2 rounded-xl bg-rose-950/30 hover:bg-rose-900/50 text-rose-300 text-xs font-semibold flex items-center space-x-1 transition-colors border border-rose-500/30"
+                  className="px-4 py-2 rounded-xl bg-rose-950/30 hover:bg-rose-900/50 text-rose-300 text-xs font-semibold flex items-center space-x-1 transition-colors border border-rose-500/30"
                 >
                   <LogOut className="w-3.5 h-3.5" />
-                  <span>Sign out</span>
+                  <span>Sign Out</span>
                 </button>
               </div>
             </div>
 
-            {/* Edit metadata form */}
+            {/* Edit Profile Form */}
             {isEditing && (
               <form onSubmit={handleSaveProfile} className="bg-[#0b121b] border border-[#00dfa2]/30 rounded-2xl p-4 space-y-3 shadow-xl animate-in fade-in">
                 <h4 className="text-xs font-bold text-white uppercase tracking-wider font-display">
-                  Update Operator Metadata
+                  Update Profile Details
                 </h4>
 
                 <div className="space-y-1">
@@ -254,37 +257,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onOpenAuthModal }) => 
                 </button>
               </form>
             )}
-
-            {/* Persona Switcher */}
-            <div className="bg-[#0b121b] border border-[#172335] rounded-2xl p-4 space-y-3">
-              <span className="text-xs font-bold text-slate-300 uppercase tracking-wider font-display flex items-center">
-                <Sparkles className="w-3.5 h-3.5 text-[#00dfa2] mr-1.5" />
-                Switch Demo Persona (1-Click)
-              </span>
-              <div className="grid grid-cols-3 gap-2 text-xs">
-                <button
-                  onClick={() => loginAsDemoPersona('admin')}
-                  className="p-2 rounded-xl bg-[#060a10] hover:bg-[#0a1820] border border-[#131b2a] hover:border-[#00dfa2]/40 text-center transition-all"
-                >
-                  <span className="block font-bold text-white text-[11px]">Sumanth K.</span>
-                  <span className="text-[9px] text-rose-400 font-mono">ADMIN</span>
-                </button>
-                <button
-                  onClick={() => loginAsDemoPersona('auditor')}
-                  className="p-2 rounded-xl bg-[#060a10] hover:bg-[#0a1820] border border-[#131b2a] hover:border-[#00dfa2]/40 text-center transition-all"
-                >
-                  <span className="block font-bold text-white text-[11px]">Elena R.</span>
-                  <span className="text-[9px] text-[#00dfa2] font-mono">AUDITOR</span>
-                </button>
-                <button
-                  onClick={() => loginAsDemoPersona('developer')}
-                  className="p-2 rounded-xl bg-[#060a10] hover:bg-[#0a1820] border border-[#131b2a] hover:border-[#00dfa2]/40 text-center transition-all"
-                >
-                  <span className="block font-bold text-white text-[11px]">Alex V.</span>
-                  <span className="text-[9px] text-purple-400 font-mono">SEC_OPS</span>
-                </button>
-              </div>
-            </div>
           </div>
 
           {/* Right Column: API Keys Vault & SIEM Controls */}
@@ -295,16 +267,16 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onOpenAuthModal }) => 
                 <div className="flex items-center space-x-2">
                   <KeyRound className="w-4 h-4 text-[#00dfa2]" />
                   <h3 className="text-sm font-bold text-white uppercase tracking-wider font-display">
-                    Live API Credentials (SDK & Gateway Proxy)
+                    API Credentials (SDK & Gateway Proxy)
                   </h3>
                 </div>
                 <span className="text-[10px] font-mono text-[#00dfa2] bg-[#00dfa2]/10 px-2 py-0.5 rounded border border-[#00dfa2]/30">
-                  ACTIVE SECRET
+                  ACTIVE
                 </span>
               </div>
 
               <p className="text-xs text-slate-400 leading-relaxed">
-                Use this bearer token in Python, TypeScript, or cURL requests to authenticate with the Privora AI Gateway:
+                Use this bearer token to authenticate with the Privora AI Security Gateway via Python, TypeScript, or cURL:
               </p>
 
               {/* Secret Display */}
@@ -351,7 +323,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onOpenAuthModal }) => 
               <div className="bg-[#0b121b] border border-[#172335] rounded-xl p-4 space-y-1">
                 <span className="text-slate-400 text-xs font-mono uppercase">Passports Minted</span>
                 <div className="text-2xl font-extrabold text-white font-mono">{user.passportsGeneratedCount}</div>
-                <span className="text-[11px] text-[#00dfa2]">Cryptographically sealed</span>
+                <span className="text-[11px] text-[#00dfa2]">Cryptographically signed</span>
               </div>
 
               <div className="bg-[#0b121b] border border-[#172335] rounded-xl p-4 space-y-1">

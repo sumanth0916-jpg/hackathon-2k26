@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { 
   Shield, 
@@ -16,8 +16,9 @@ import {
   Info,
   Sparkles,
   ArrowRight,
-  Zap,
-  Radio
+  ChevronDown,
+  Settings,
+  ShieldAlert
 } from 'lucide-react';
 
 interface SidebarLayoutProps {
@@ -32,7 +33,21 @@ export const SidebarLayout: React.FC<SidebarLayoutProps> = ({
   onOpenVerifyModal
 }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const getBreadcrumb = () => {
     switch (location.pathname) {
@@ -70,27 +85,15 @@ export const SidebarLayout: React.FC<SidebarLayoutProps> = ({
     },
     {
       name: 'Security Center',
-      subtitle: 'Live protection & matrix',
+      subtitle: 'Live protection',
       path: '/attack-matrix',
       icon: Activity
-    },
-    {
-      name: 'Passport Vault',
-      subtitle: 'Audit ledger & records',
-      path: '/vault',
-      icon: KeyRound
     },
     {
       name: 'Privacy by Design',
       subtitle: 'How Privora works',
       path: '/about',
       icon: Lock
-    },
-    {
-      name: 'Policy Engine',
-      subtitle: 'Guardrail thresholds',
-      path: '/policy',
-      icon: Sliders
     },
     {
       name: 'Profile',
@@ -102,7 +105,7 @@ export const SidebarLayout: React.FC<SidebarLayoutProps> = ({
 
   return (
     <div className="min-h-screen bg-[#070b12] text-slate-100 flex flex-col md:flex-row font-sans selection:bg-cyan-500 selection:text-slate-950">
-      {/* LEFT SIDEBAR (Matching User's Screenshot Exactly) */}
+      {/* LEFT SIDEBAR (1. PROFILE SECTION IN SIDEBAR) */}
       <aside className="w-full md:w-64 bg-[#05080e] border-r border-[#131b2a] flex flex-col justify-between shrink-0 p-4 space-y-6">
         <div className="space-y-6">
           {/* Top Brand Logo */}
@@ -132,12 +135,10 @@ export const SidebarLayout: React.FC<SidebarLayoutProps> = ({
                 const isProfile = item.path === '/profile' && location.pathname === '/profile';
                 const isScanner = item.path === '/' && (location.pathname === '/' || location.pathname === '/scanner');
                 const isAttack = item.path === '/attack-matrix' && location.pathname === '/attack-matrix';
-                const isVault = item.path === '/vault' && location.pathname === '/vault';
                 const isAbout = item.name === 'Privacy by Design' && location.pathname === '/about';
                 const isOverview = item.name === 'Overview' && location.pathname === '/overview';
-                const isPolicy = item.path === '/policy' && location.pathname === '/policy';
 
-                const isActive = isProfile || isScanner || isAttack || isVault || isAbout || isOverview || isPolicy;
+                const isActive = isProfile || isScanner || isAttack || isAbout || isOverview;
 
                 return (
                   <Link
@@ -175,7 +176,7 @@ export const SidebarLayout: React.FC<SidebarLayoutProps> = ({
           </div>
         </div>
 
-        {/* Bottom Sidebar Box (Exact copy from user screenshot) */}
+        {/* Bottom Sidebar Box */}
         <div className="space-y-3 pt-4 border-t border-[#131b2a]">
           <div className="p-3.5 rounded-xl bg-[#09111b] border border-[#172336] space-y-1.5">
             <div className="flex items-center space-x-2 text-[10px] font-bold text-[#00dfa2] font-mono uppercase tracking-wider">
@@ -200,9 +201,9 @@ export const SidebarLayout: React.FC<SidebarLayoutProps> = ({
         </div>
       </aside>
 
-      {/* MAIN VIEWPORT (Top Header + Page Content + Footer) */}
+      {/* MAIN VIEWPORT */}
       <div className="flex-1 flex flex-col min-w-0 bg-[#070b12]">
-        {/* Top Header Bar (Matching user screenshot) */}
+        {/* Top Header Bar (5. TOP-RIGHT SIGN-IN BUTTON & DROPDOWN) */}
         <header className="h-16 border-b border-[#131b2a] bg-[#070b12]/80 backdrop-blur-md px-6 flex items-center justify-between sticky top-0 z-40">
           {/* Breadcrumb */}
           <div className="flex items-center space-x-2 text-xs font-mono">
@@ -219,23 +220,85 @@ export const SidebarLayout: React.FC<SidebarLayoutProps> = ({
               <span>DEMO ENVIRONMENT</span>
             </div>
 
-            {/* User Login/Profile Action Button */}
+            {/* 5. TOP-RIGHT SIGN IN / USER DROPDOWN */}
             {user ? (
-              <Link
-                to="/profile"
-                className="flex items-center space-x-2 bg-[#0d1724] hover:bg-[#132033] border border-[#1e2f47] px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-200 transition-all group"
-              >
-                <div className="w-5 h-5 rounded-full bg-[#00dfa2] text-slate-950 flex items-center justify-center font-bold text-[10px]">
-                  {user.name.charAt(0)}
-                </div>
-                <span className="font-mono text-xs text-white group-hover:text-[#00dfa2]">
-                  {user.name}
-                </span>
-              </Link>
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  type="button"
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className="flex items-center space-x-2 bg-[#0d1724] hover:bg-[#132033] border border-[#1e2f47] px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-200 transition-all cursor-pointer group"
+                >
+                  <div className="w-5 h-5 rounded-full bg-[#00dfa2] text-slate-950 flex items-center justify-center font-bold text-[10px]">
+                    {user.name.charAt(0)}
+                  </div>
+                  <span className="font-mono text-xs text-white group-hover:text-[#00dfa2]">
+                    {user.name}
+                  </span>
+                  <ChevronDown className="w-3.5 h-3.5 text-slate-400 group-hover:text-white transition-transform" />
+                </button>
+
+                {/* Dropdown Menu */}
+                {dropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-[#0b121b] border border-[#172335] shadow-2xl py-2 z-50 text-xs font-sans animate-in fade-in zoom-in-95 duration-150">
+                    <div className="px-4 py-2.5 border-b border-[#172335] space-y-0.5">
+                      <p className="font-bold text-white text-xs">{user.name}</p>
+                      <p className="text-[11px] text-slate-400 font-mono truncate">{user.email}</p>
+                      <span className="inline-block text-[9px] font-mono text-[#00dfa2] bg-[#00dfa2]/10 px-1.5 py-0.2 rounded border border-[#00dfa2]/20 mt-1">
+                        {user.clearanceLevel.split(':')[0]}
+                      </span>
+                    </div>
+
+                    <div className="py-1">
+                      <Link
+                        to="/profile"
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center space-x-2.5 px-4 py-2 text-slate-300 hover:text-white hover:bg-[#121c2a] transition-colors"
+                      >
+                        <User className="w-4 h-4 text-[#00dfa2]" />
+                        <span>Profile</span>
+                      </Link>
+
+                      <Link
+                        to="/policy"
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center space-x-2.5 px-4 py-2 text-slate-300 hover:text-white hover:bg-[#121c2a] transition-colors"
+                      >
+                        <Sliders className="w-4 h-4 text-cyan-400" />
+                        <span>Security Settings</span>
+                      </Link>
+
+                      <Link
+                        to="/vault"
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center space-x-2.5 px-4 py-2 text-slate-300 hover:text-white hover:bg-[#121c2a] transition-colors"
+                      >
+                        <KeyRound className="w-4 h-4 text-emerald-400" />
+                        <span>Trust Passport Vault</span>
+                      </Link>
+                    </div>
+
+                    <div className="pt-1 border-t border-[#172335]">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          logout();
+                          setDropdownOpen(false);
+                          navigate('/profile');
+                        }}
+                        className="w-full text-left flex items-center space-x-2.5 px-4 py-2 text-rose-400 hover:text-rose-300 hover:bg-rose-950/20 transition-colors"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        <span>Sign Out</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             ) : (
               <button
+                type="button"
                 onClick={onOpenAuthModal}
-                className="flex items-center space-x-1.5 bg-[#09111b] hover:bg-[#0f1d2c] border border-[#1e2f47] hover:border-[#00dfa2]/50 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-200 transition-all"
+                className="flex items-center space-x-1.5 bg-[#09111b] hover:bg-[#0f1d2c] border border-[#1e2f47] hover:border-[#00dfa2]/50 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-200 transition-all cursor-pointer"
               >
                 <span>→ Sign in</span>
               </button>
@@ -243,12 +306,12 @@ export const SidebarLayout: React.FC<SidebarLayoutProps> = ({
           </div>
         </header>
 
-        {/* Page Content Container */}
+        {/* Page Content */}
         <main className="flex-1 min-w-0">
           {children}
         </main>
 
-        {/* Footer (Matching user screenshot) */}
+        {/* Footer */}
         <footer className="h-12 border-t border-[#131b2a] bg-[#05080e] px-6 flex items-center justify-between text-[11px] text-slate-400 font-mono">
           <span>Privora / AI security checkpoint</span>
           <span>SYNTHETIC DEMO DATA • LOCAL ONLY</span>
