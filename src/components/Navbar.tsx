@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { 
   Shield, 
   ShieldCheck, 
@@ -8,19 +9,22 @@ import {
   Search, 
   Sliders, 
   FileCode, 
-  Sparkles,
-  Zap,
-  Info
+  Sparkles, 
+  Zap, 
+  Info,
+  User,
+  ChevronDown
 } from 'lucide-react';
 import { getPassportVault } from '../services/passportGenerator';
 
 interface NavbarProps {
   onOpenVerifyModal?: () => void;
-  onTriggerDemo?: (scenarioId: string) => void;
+  onOpenAuthModal?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenVerifyModal }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onOpenVerifyModal, onOpenAuthModal }) => {
   const location = useLocation();
+  const { user } = useAuth();
   const [vaultCount, setVaultCount] = useState<number>(0);
 
   useEffect(() => {
@@ -105,7 +109,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenVerifyModal }) => {
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center space-x-1">
+          <nav className="hidden lg:flex items-center space-x-1">
             {navLinks.map((link) => {
               const Icon = link.icon;
               const isActive = location.pathname === link.path;
@@ -131,15 +135,44 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenVerifyModal }) => {
             })}
           </nav>
 
-          {/* Action CTAs */}
+          {/* User Profile & Auth Section */}
           <div className="flex items-center space-x-3">
-            <Link
-              to="/"
-              className="hidden lg:inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 font-semibold text-xs tracking-wide transition-all duration-200 shadow-md shadow-emerald-500/20 hover:scale-[1.02]"
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Judge Quick-Demo</span>
-            </Link>
+            {user ? (
+              <Link
+                to="/profile"
+                className="flex items-center space-x-2.5 p-1.5 pr-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-cyan-500/40 transition-all group"
+              >
+                <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-cyan-500 to-emerald-500 flex items-center justify-center text-slate-950 font-bold text-xs font-display">
+                  {user.name.charAt(0)}
+                </div>
+                <div className="text-left hidden sm:block">
+                  <span className="text-xs font-bold text-white block group-hover:text-cyan-300 leading-none">
+                    {user.name}
+                  </span>
+                  <span className="text-[9px] text-cyan-400 font-mono">
+                    {user.clearanceLevel.split(':')[0]}
+                  </span>
+                </div>
+              </Link>
+            ) : (
+              <button
+                onClick={onOpenAuthModal}
+                className="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 text-xs font-bold transition-all"
+              >
+                <User className="w-3.5 h-3.5" />
+                <span>Log In</span>
+              </button>
+            )}
+
+            {onOpenAuthModal && (
+              <button
+                onClick={onOpenAuthModal}
+                className="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 transition-colors"
+                title="Switch Demo Persona"
+              >
+                <Sparkles className="w-4 h-4 text-cyan-400" />
+              </button>
+            )}
           </div>
         </div>
       </div>
