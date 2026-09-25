@@ -13,7 +13,7 @@ import {
   Zap, 
   Info,
   User,
-  ChevronDown
+  LogIn
 } from 'lucide-react';
 import { getPassportVault } from '../services/passportGenerator';
 
@@ -46,6 +46,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenVerifyModal, onOpenAuthMod
     { name: 'Passport Vault', path: '/vault', icon: KeyRound, badge: vaultCount },
     { name: 'Attack Matrix', path: '/attack-matrix', icon: Activity },
     { name: 'Policy Rules', path: '/policy', icon: Sliders },
+    { name: 'Profile', path: '/profile', icon: User },
     { name: 'Architecture', path: '/about', icon: Info },
     { name: 'API & SDK', path: '/api-docs', icon: FileCode }
   ];
@@ -140,7 +141,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenVerifyModal, onOpenAuthMod
             {user ? (
               <Link
                 to="/profile"
-                className="flex items-center space-x-2.5 p-1.5 pr-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-cyan-500/40 transition-all group"
+                className="flex items-center space-x-2.5 p-1.5 pr-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-cyan-500/40 transition-all group shadow-sm"
               >
                 <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-cyan-500 to-emerald-500 flex items-center justify-center text-slate-950 font-bold text-xs font-display">
                   {user.name.charAt(0)}
@@ -155,24 +156,22 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenVerifyModal, onOpenAuthMod
                 </div>
               </Link>
             ) : (
-              <button
-                onClick={onOpenAuthModal}
+              <Link
+                to="/login"
                 className="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 text-xs font-bold transition-all"
               >
-                <User className="w-3.5 h-3.5" />
-                <span>Log In</span>
-              </button>
+                <LogIn className="w-3.5 h-3.5" />
+                <span>Operator Login</span>
+              </Link>
             )}
 
-            {onOpenAuthModal && (
-              <button
-                onClick={onOpenAuthModal}
-                className="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 transition-colors"
-                title="Switch Demo Persona"
-              >
-                <Sparkles className="w-4 h-4 text-cyan-400" />
-              </button>
-            )}
+            <Link
+              to="/login"
+              className="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-cyan-400 border border-slate-800 transition-colors"
+              title="Switch Persona / Login Page"
+            >
+              <Sparkles className="w-4 h-4 text-cyan-400" />
+            </Link>
           </div>
         </div>
       </div>

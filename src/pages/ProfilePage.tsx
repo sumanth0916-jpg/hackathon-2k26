@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { 
   User, 
@@ -19,33 +20,54 @@ import {
   Mail,
   Zap,
   Eye,
-  EyeOff
+  EyeOff,
+  Edit3,
+  Save,
+  ArrowLeft
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 export const ProfilePage: React.FC = () => {
   const { user, loginAsDemoPersona, logout, updateProfile, rollApiKey } = useAuth();
+  const navigate = useNavigate();
+
   const [copiedKey, setCopiedKey] = useState<boolean>(false);
   const [showApiKey, setShowApiKey] = useState<boolean>(false);
   const [rollSuccess, setRollSuccess] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+
+  // Form edit state
+  const [name, setName] = useState<string>(user?.name || '');
+  const [organization, setOrganization] = useState<string>(user?.organization || '');
+  const [role, setRole] = useState<string>(user?.role || '');
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-[#060911] text-slate-100 py-16 px-4 flex items-center justify-center">
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 max-w-md w-full text-center space-y-4 shadow-2xl">
-          <div className="p-3 bg-cyan-500/10 rounded-full w-fit mx-auto border border-cyan-500/30">
-            <Lock className="w-8 h-8 text-cyan-400" />
+      <div className="min-h-[calc(100vh-4rem)] bg-[#060911] text-slate-100 py-16 px-4 flex items-center justify-center">
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 max-w-md w-full text-center space-y-5 shadow-2xl">
+          <div className="p-4 bg-cyan-500/10 rounded-2xl w-fit mx-auto border border-cyan-500/30">
+            <Lock className="w-10 h-10 text-cyan-400" />
           </div>
-          <h2 className="text-lg font-bold text-white font-display">Authentication Required</h2>
-          <p className="text-xs text-slate-400">
-            Please log in or select a demo persona to view security credentials.
-          </p>
-          <button
-            onClick={() => loginAsDemoPersona('admin')}
-            className="w-full py-2.5 rounded-xl bg-cyan-500 text-slate-950 font-bold text-xs hover:bg-cyan-400 transition-all shadow"
-          >
-            Authenticate as Sumanth (Security Lead)
-          </button>
+          <div className="space-y-1">
+            <h2 className="text-xl font-bold text-white font-display">Authentication Required</h2>
+            <p className="text-xs text-slate-400">
+              Please sign in to access your Security Operator profile and manage API credentials.
+            </p>
+          </div>
+          <div className="space-y-2 pt-2">
+            <Link
+              to="/login"
+              className="block w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-500 text-slate-950 font-bold text-xs hover:from-cyan-400 hover:to-emerald-400 transition-all shadow-lg shadow-cyan-500/20"
+            >
+              Go to Login Page →
+            </Link>
+            <button
+              onClick={() => loginAsDemoPersona('admin')}
+              className="w-full py-2.5 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-300 border border-slate-800 text-xs font-semibold transition-all"
+            >
+              Fast 1-Click Demo Login (Sumanth - Admin)
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -58,12 +80,24 @@ export const ProfilePage: React.FC = () => {
   };
 
   const handleRollKey = () => {
-    if (confirm('Are you sure you want to roll your Privora API Key? Old tokens will be invalidated immediately.')) {
+    if (confirm('Are you sure you want to rotate your Privora API Key? Previous tokens will be revoked.')) {
       rollApiKey();
       setRollSuccess(true);
       confetti({ particleCount: 30, spread: 50, origin: { y: 0.6 } });
       setTimeout(() => setRollSuccess(false), 2500);
     }
+  };
+
+  const handleSaveProfile = (e: React.FormEvent) => {
+    e.preventDefault();
+    updateProfile({ name, organization, role });
+    setIsEditing(false);
+    confetti({ particleCount: 25, spread: 45, origin: { y: 0.7 } });
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
   };
 
   return (
@@ -84,13 +118,21 @@ export const ProfilePage: React.FC = () => {
             </p>
           </div>
 
-          <button
-            onClick={logout}
-            className="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-lg bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border border-rose-500/30 text-xs font-semibold self-start sm:self-auto transition-all"
-          >
-            <LogOut className="w-3.5 h-3.5" />
-            <span>Terminate Session</span>
-          </button>
+          <div className="flex items-center space-x-2 self-start sm:self-auto">
+            <Link
+              to="/login"
+              className="px-3.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition-all"
+            >
+              Switch Account
+            </Link>
+            <button
+              onClick={handleLogout}
+              className="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-lg bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border border-rose-500/30 text-xs font-semibold transition-all"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span>Log Out</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -114,7 +156,7 @@ export const ProfilePage: React.FC = () => {
                 </span>
               </div>
 
-              {/* User Identity */}
+              {/* User Identity & Avatar */}
               <div className="flex items-center space-x-4">
                 <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500/30 via-emerald-500/20 to-blue-600/30 border-2 border-cyan-400 flex items-center justify-center text-xl font-bold font-display text-white shadow-inner">
                   {user.name.charAt(0)}
@@ -126,7 +168,7 @@ export const ProfilePage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Clearance Badge */}
+              {/* Clearance Badge & Details */}
               <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-2 text-xs font-mono">
                 <div className="flex justify-between">
                   <span className="text-slate-400">Clearance:</span>
@@ -149,8 +191,69 @@ export const ProfilePage: React.FC = () => {
                 <span className="text-slate-500 block uppercase tracking-wider">PGP KEY FINGERPRINT:</span>
                 <span className="text-slate-300 select-all block truncate">{user.pgpFingerprint}</span>
               </div>
+
+              {/* Edit Profile Button */}
+              <button
+                onClick={() => {
+                  setName(user.name);
+                  setOrganization(user.organization);
+                  setRole(user.role);
+                  setIsEditing(!isEditing);
+                }}
+                className="w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center justify-center space-x-1.5 transition-colors"
+              >
+                <Edit3 className="w-3.5 h-3.5 text-cyan-400" />
+                <span>{isEditing ? 'Cancel Edit' : 'Edit Profile Details'}</span>
+              </button>
             </div>
           </div>
+
+          {/* Edit Form Modal/Drawer */}
+          {isEditing && (
+            <form onSubmit={handleSaveProfile} className="bg-slate-900 border border-cyan-500/40 rounded-2xl p-4 space-y-3 shadow-xl">
+              <h4 className="text-xs font-bold text-white uppercase tracking-wider font-display">
+                Update Operator Metadata
+              </h4>
+
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-400 block font-mono">NAME</label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-400 block font-mono">ROLE TITLE</label>
+                <input
+                  type="text"
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-400 block font-mono">ORGANIZATION</label>
+                <input
+                  type="text"
+                  value={organization}
+                  onChange={(e) => setOrganization(e.target.value)}
+                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full py-2 rounded-lg bg-cyan-500 text-slate-950 font-bold text-xs hover:bg-cyan-400 transition-all flex items-center justify-center space-x-1"
+              >
+                <Save className="w-3.5 h-3.5" />
+                <span>Save Changes</span>
+              </button>
+            </form>
+          )}
 
           {/* Quick Demo Persona Switcher (Crucial for Judges) */}
           <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 space-y-3">

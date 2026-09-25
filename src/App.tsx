@@ -11,6 +11,7 @@ import { PolicyEnginePage } from './pages/PolicyEnginePage';
 import { ApiDocsPage } from './pages/ApiDocsPage';
 import { AboutPage } from './pages/AboutPage';
 import { ProfilePage } from './pages/ProfilePage';
+import { LoginPage } from './pages/LoginPage';
 
 export const App: React.FC = () => {
   const [isVerifyModalOpen, setIsVerifyModalOpen] = useState<boolean>(false);
@@ -50,6 +51,8 @@ export const App: React.FC = () => {
               <Route path="/attack-matrix" element={<AttackMatrixPage />} />
               <Route path="/policy" element={<PolicyEnginePage />} />
               <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/auth" element={<LoginPage />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/api-docs" element={<ApiDocsPage />} />
               <Route path="*" element={<Navigate to="/" replace />} />
